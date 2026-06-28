@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud SQL Private Connector Tester</title>
+  <!-- Google Fonts: Inter for UI, JetBrains Mono for the terminal console -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-glows">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <svg class="gcp-icon" viewBox="0 0 24 24" width="32" height="32">
+          <path fill="#4285F4" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+          <path fill="#34A853" d="M12 8v4l3 3"/>
+        </svg>
+        <h1>Cloud SQL <span class="accent-text">Private Link Tester</span></h1>
+      </div>
+      <p class="subtitle">Verify and diagnose secure serverless private network connections (VPC peering or Direct VPC egress) between Google Cloud Run and Google Cloud SQL.</p>
+    </header>
+
+    <main class="dashboard-grid">
+      <!-- LEFT COLUMN: DB Configuration details -->
+      <section class="card config-card">
+        <div class="card-header">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22c5.523 0 10-2.239 10-5s-4.477-5-10-5S2 14.239 2 17s4.477 5 10 5z"/>
+              <path d="M22 17V9c0 2.761-4.477 5-10 5S2 11.761 2 9v8"/>
+              <path d="M22 9V5c0 2.761-4.477 5-10 5S2 7.761 2 5v4"/>
+            </svg>
+          </div>
+          <h2>Database Config Info</h2>
+        </div>
+        <div class="card-body">
+          <div class="config-grid">
+            <div class="config-item">
+              <label>Database Type</label>
+              <div id="cfg-type" class="val-badge">Loading...</div>
+            </div>
+            <div class="config-item">
+              <label>Host (Private IP)</label>
+              <div id="cfg-host" class="val-text">Loading...</div>
+            </div>
+            <div class="config-item">
+              <label>Port</label>
+              <div id="cfg-port" class="val-text">Loading...</div>
+            </div>
+            <div class="config-item">
+              <label>Database Name</label>
+              <div id="cfg-database" class="val-text">Loading...</div>
+            </div>
+            <div class="config-item">
+              <label>Username</label>
+              <div id="cfg-user" class="val-text">Loading...</div>
+            </div>
+            <div class="config-item">
+              <label>Password Configured</label>
+              <div id="cfg-password" class="val-text">Loading...</div>
+            </div>
+          </div>
+          <div class="vpc-warning">
+            <p><strong>Note:</strong> To test private connection successfully, the Cloud Run instance must reside in the same VPC or be bridged via a Serverless VPC Access Connector/Direct VPC egress routing all traffic to the SQL Private IP.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: Control panel, status, terminal -->
+      <div class="right-column-stack">
+        <!-- Status Card -->
+        <section class="card status-card">
+          <div class="status-header">
+            <div class="status-info">
+              <span class="status-label">CONNECTION STATUS</span>
+              <div class="status-indicator-wrap">
+                <span id="status-dot" class="status-dot status-checking"></span>
+                <h3 id="status-text">Checking Configuration...</h3>
+              </div>
+            </div>
+            <div class="latency-info">
+              <span class="status-label">PING LATENCY</span>
+              <div id="latency-text" class="latency-val">-- ms</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Actions Card -->
+        <section class="card actions-card">
+          <h2>Diagnostic Tools</h2>
+          <div class="button-group">
+            <button id="btn-ping" class="btn btn-primary">
+              <span class="btn-icon">⚡</span> Run Ping Connection (Read)
+            </button>
+            <button id="btn-write" class="btn btn-secondary">
+              <span class="btn-icon">📝</span> Run Read/Write Lifecycle
+            </button>
+          </div>
+        </section>
+
+        <!-- Terminal Console Card -->
+        <section class="card console-card">
+          <div class="console-header">
+            <div class="console-title">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span class="title-text">diagnostics_terminal.sh</span>
+            </div>
+            <button id="btn-clear-console" class="btn-clear">Clear Logs</button>
+          </div>
+          <div id="terminal-screen" class="console-screen">
+            <div class="line system-line">[SYSTEM] Initializing Cloud SQL Connector Diagnostic Tool v1.0.0...</div>
+            <div class="line system-line">[SYSTEM] Ready to send tests. Press "Run Ping Connection" to begin.</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer-bar">
+      <p>Cloud Run to Cloud SQL Private Connectivity Tester | DeepMind Advanced Agentic Coding</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

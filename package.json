@@ -1,0 +1,16 @@
+{
+  "name": "test-cloudsql",
+  "version": "1.0.0",
+  "description": "Cloud Run to Cloud SQL Private Connectivity Test App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mssql": "^12.6.0",
+    "mysql2": "^3.9.7",
+    "pg": "^8.11.5"
+  }
+}
