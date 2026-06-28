@@ -79,16 +79,22 @@
         <!-- Status Card -->
         <section class="card status-card">
           <div class="status-header">
-            <div class="status-info">
-              <span class="status-label">CONNECTION STATUS</span>
+            <div class="status-info-col">
+              <span class="status-label">DATABASE CONNECTION</span>
               <div class="status-indicator-wrap">
                 <span id="status-dot" class="status-dot status-checking"></span>
                 <h3 id="status-text">Checking Configuration...</h3>
               </div>
+              <div id="latency-text" class="latency-val" style="margin-top: 0.25rem;">-- ms</div>
             </div>
-            <div class="latency-info">
-              <span class="status-label">PING LATENCY</span>
-              <div id="latency-text" class="latency-val">-- ms</div>
+            <div class="status-divider"></div>
+            <div class="status-info-col">
+              <span class="status-label">INTERNET EGRESS</span>
+              <div class="status-indicator-wrap">
+                <span id="internet-dot" class="status-dot status-checking"></span>
+                <h3 id="internet-text">Checking Egress...</h3>
+              </div>
+              <div id="internet-latency" class="latency-val" style="margin-top: 0.25rem;">-- ms</div>
             </div>
           </div>
         </section>
@@ -102,6 +108,9 @@
             </button>
             <button id="btn-write" class="btn btn-secondary">
               <span class="btn-icon">📝</span> Run Read/Write Lifecycle
+            </button>
+            <button id="btn-internet" class="btn btn-secondary" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.25);">
+              <span class="btn-icon">🌐</span> Test Internet Egress
             </button>
           </div>
         </section>
@@ -124,6 +133,74 @@
         </section>
       </div>
     </main>
+
+    <!-- DATABASE EXPLORER SECTION -->
+    <section class="card explorer-card">
+      <div class="card-header explorer-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="icon-wrap" style="color: #06b6d4;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+              <line x1="9" y1="9" x2="21" y2="9"/>
+            </svg>
+          </div>
+          <h2>Interactive Database Explorer</h2>
+        </div>
+        <div class="explorer-controls">
+          <button id="btn-create-sample" class="btn btn-sm btn-sample">Create Sample Table</button>
+          <select id="tables-select" class="dropdown-select">
+            <option value="">Select a table...</option>
+          </select>
+          <button id="btn-refresh-tables" class="btn-icon-only">🔄</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding: 0;">
+        <div class="explorer-table-container">
+          <div id="explorer-welcome" class="welcome-screen">
+            <p>Database Explorer is ready. Click <strong>Refresh Tables</strong> or select a table to explore and perform CRUD (Insert, Read, Update, Delete) operations.</p>
+          </div>
+          <div id="explorer-content" class="explorer-content" style="display: none;">
+            <div class="explorer-toolbar">
+              <span id="rows-count" class="rows-indicator">Showing 0 rows</span>
+              <button id="btn-add-row" class="btn btn-sm btn-primary">➕ Add New Row</button>
+            </div>
+            <div class="table-scroll-wrapper">
+              <table id="explorer-grid" class="explorer-grid-table">
+                <thead>
+                  <tr id="grid-header-row">
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="grid-body">
+                  <!-- Dynamic rows go here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODAL FOR ADD/EDIT ROW -->
+    <div id="crud-modal" class="modal-overlay" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modal-title">Add New Row</h3>
+          <button id="btn-close-modal" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="crud-form" class="modal-form">
+            <!-- Dynamic fields go here -->
+            <input type="hidden" id="modal-pk-val">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-cancel-modal" class="btn btn-secondary btn-sm">Cancel</button>
+          <button id="btn-save-modal" class="btn id-save-btn btn-primary btn-sm">Save Record</button>
+        </div>
+      </div>
+    </div>
 
     <footer class="app-footer-bar">
       <p>Cloud Run to Cloud SQL Private Connectivity Tester | DeepMind Advanced Agentic Coding</p>
